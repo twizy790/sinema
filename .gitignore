@@ -1,0 +1,12 @@
+bin/
+obj/
+.build-user/
+.keys/
+.vs/
+App_Data/cinema.json
+*.user
+*.suo
+
+App_Data/cinema.db
+App_Data/cinema.db-shm
+App_Data/cinema.db-wal
