@@ -1,3 +1,34 @@
 @model CinemaSite.Models.LoginInput
-@{ ViewData["Title"] = "Вход"; }
-<section class="page-hero"><span class="eyebrow">РАДЫ ВАС ВИДЕТЬ</span><h1>ВОЙТИ В <em>АККАУНТ</em></h1></section><section class="account-wrap"><div class="account-card"><form asp-action="Login" method="post" class="simple-form"><input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" /><div asp-validation-summary="ModelOnly" class="notice"></div><label>Электронная почта<input asp-for="Email" autocomplete="email" /></label><label>Пароль<input asp-for="Password" autocomplete="current-password" /></label><button class="button button-primary" type="submit">Войти ↗</button></form><p>Нет аккаунта? <a asp-action="Register">Зарегистрироваться</a></p></div></section>
+@{
+    ViewData["Title"] = "Вход";
+}
+<section class="page-hero">
+    <span class="eyebrow">РАДЫ ВАС ВИДЕТЬ</span>
+    <h1>
+        ВОЙТИ В
+        <em>АККАУНТ</em>
+    </h1>
+</section>
+<section class="account-wrap">
+    <div class="account-card">
+        <form asp-action="Login" method="post" class="simple-form">
+            <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+            <div asp-validation-summary="ModelOnly" class="notice"></div>
+            <label>
+                Электронная почта
+                <input asp-for="Email" autocomplete="email" />
+            </label>
+            <label>
+                Пароль
+                <input asp-for="Password" autocomplete="current-password" />
+            </label>
+            <button class="button button-primary" type="submit">
+                Войти ↗
+            </button>
+        </form>
+        <p>
+            Нет аккаунта?
+            <a asp-action="Register">Зарегистрироваться</a>
+        </p>
+    </div>
+</section>

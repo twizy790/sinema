@@ -1,3 +1,81 @@
 @model List<CinemaSite.Models.Review>
-@{ ViewData["Title"] = "Отзывы посетителей"; }
-<section class="page-hero"><span class="eyebrow">ВАШИ ВПЕЧАТЛЕНИЯ</span><h1>ГОВОРИТЕ <em>ГРОМЧЕ</em></h1><p>Расскажите, как прошёл ваш вечер в СИНЕМА.</p></section><section class="section review-list">@if(TempData["Message"] is string message){<div class="notice">@message</div>}@foreach(var review in Model){<article><div class="quote-stars">@(new string('★',review.Rating)+new string('☆',5-review.Rating))</div><blockquote>@review.Text</blockquote><span>@review.UserName · @review.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</span></article>}@if(User.Identity?.IsAuthenticated==true){<form asp-action="Reviews" method="post" class="simple-form"><h2>ОСТАВИТЬ ОТЗЫВ</h2><label>Оценка<select name="Rating"><option value="5">★★★★★</option><option value="4">★★★★☆</option><option value="3">★★★☆☆</option><option value="2">★★☆☆☆</option><option value="1">★☆☆☆☆</option></select></label><label>Ваш отзыв<textarea name="Text" rows="4" minlength="5" maxlength="1000" required placeholder="Поделитесь впечатлением..."></textarea></label><button class="button button-primary" type="submit">Отправить на модерацию ↗</button></form>}else{<div class="simple-form"><h2>ОСТАВИТЬ ОТЗЫВ</h2><p>Войдите в аккаунт, чтобы поделиться впечатлением.</p><a class="button button-primary" asp-controller="Account" asp-action="Login">Войти ↗</a></div>}</section>
+@{
+    ViewData["Title"] = "Отзывы посетителей";
+}
+<section class="page-hero">
+    <span class="eyebrow">ВАШИ ВПЕЧАТЛЕНИЯ</span>
+    <h1>
+        ГОВОРИТЕ
+        <em>ГРОМЧЕ</em>
+    </h1>
+    <p>
+        Расскажите, как прошёл ваш вечер в СИНЕМА.
+    </p>
+</section>
+<section class="section review-list">
+    @if (TempData["Message"] is string message)
+    {
+        <div class="notice">
+            @message
+        </div>
+    }
+    @foreach (var review in Model)
+    {
+        <article>
+            <div class="quote-stars">
+                @(new string('★',review.Rating)+new string('☆',5-review.Rating))
+            </div>
+            <blockquote>
+                @review.Text
+            </blockquote>
+            <span>@review.UserName · @review.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</span>
+        </article>
+    }
+    @if (User.Identity?.IsAuthenticated==true)
+    {
+        <form asp-action="Reviews" method="post" class="simple-form">
+            <h2>
+                ОСТАВИТЬ ОТЗЫВ
+            </h2>
+            <label>
+                Оценка
+                <select name="Rating">
+                    <option value="5">
+                        ★★★★★
+                    </option>
+                    <option value="4">
+                        ★★★★☆
+                    </option>
+                    <option value="3">
+                        ★★★☆☆
+                    </option>
+                    <option value="2">
+                        ★★☆☆☆
+                    </option>
+                    <option value="1">
+                        ★☆☆☆☆
+                    </option>
+                </select>
+            </label>
+            <label>
+                Ваш отзыв
+                <textarea name="Text" rows="4" minlength="5" maxlength="1000" required placeholder="Поделитесь впечатлением..."></textarea>
+            </label>
+            <button class="button button-primary" type="submit">
+                Отправить на модерацию ↗
+            </button>
+        </form>
+    }
+    else
+    {
+        <div class="simple-form">
+            <h2>
+                ОСТАВИТЬ ОТЗЫВ
+            </h2>
+            <p>
+                Войдите в аккаунт, чтобы поделиться впечатлением.
+            </p>
+            <a class="button button-primary" asp-controller="Account" asp-action="Login">Войти ↗</a>
+        </div>
+    }
+</section>

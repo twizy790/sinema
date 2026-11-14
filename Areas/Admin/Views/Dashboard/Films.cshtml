@@ -1,3 +1,89 @@
 @model List<CinemaSite.Models.Film>
-@{ ViewData["Title"]="Управление афишей"; }
-<section class="page-hero"><span class="eyebrow">АДМИНИСТРАТИВНАЯ ПАНЕЛЬ</span><h1>УПРАВЛЕНИЕ <em>АФИШЕЙ</em></h1><p role="status">@TempData["Message"]</p></section><section class="section admin-section"><nav class="admin-nav"><a asp-action="Index">Обзор</a><a asp-action="Films">Фильмы</a><a asp-action="Screenings">Расписание</a><a asp-action="Users">Пользователи</a><a asp-action="Reviews">Отзывы</a><a asp-action="Messages">Обратная связь</a></nav><form asp-action="SaveFilm" method="post" class="admin-form"><h2>ДОБАВИТЬ <em>ФИЛЬМ</em></h2><input name="Title" placeholder="Название" value="@TempData["FilmTitle"]" required/><input name="Genre" placeholder="Жанр" value="@TempData["FilmGenre"]"/><input name="DurationMinutes" type="number" placeholder="Длительность в минутах" value="@TempData["FilmDuration"]" min="1" max="500" required/><input name="AgeRating" placeholder="Возрастной рейтинг" value="@(TempData["FilmAgeRating"] ?? "12+")"/><input name="Poster" placeholder="Имя файла постера в wwwroot/images/posters, например poster-dune.jpg или poster-panda.avif" value="@TempData["FilmPoster"]"/><input name="TrailerUrl" placeholder="Ссылка на трейлер (необязательно, только HTTPS)" value="@TempData["FilmTrailerUrl"]"/><textarea name="Description" placeholder="Описание">@TempData["FilmDescription"]</textarea><button class="button button-primary" type="submit">Добавить фильм ↗</button></form><div class="admin-table">@foreach(var film in Model){<details class="film-edit"><summary>@film.Title · @film.Genre · @film.DurationMinutes мин · @(film.IsActive?"В афише":"Скрыт")</summary>@if(film.IsActive){<form asp-action="SaveFilm" method="post" class="admin-form"><input type="hidden" name="Id" value="@film.Id"/><input name="Title" value="@film.Title" required/><input name="Genre" value="@film.Genre"/><input name="DurationMinutes" type="number" value="@film.DurationMinutes" min="1" max="500" required/><input name="AgeRating" value="@film.AgeRating"/><input name="Poster" value="@film.Poster"/><input name="TrailerUrl" value="@film.TrailerUrl"/><textarea name="Description">@film.Description</textarea><button class="button button-primary" type="submit">Сохранить изменения</button></form><form asp-action="DeleteFilm" method="post"><input type="hidden" name="id" value="@film.Id"/><button class="button button-outline" type="submit">Убрать из афиши</button></form>}else{<form asp-action="RestoreFilm" method="post"><input type="hidden" name="id" value="@film.Id"/><button class="button button-primary" type="submit">Вернуть в афишу</button></form><form asp-action="PermanentlyDeleteFilm" method="post" onsubmit="return confirm('Удалить фильм навсегда? Это действие нельзя отменить.');"><input type="hidden" name="id" value="@film.Id"/><button class="button button-outline" type="submit">Удалить навсегда</button></form>}</details>}</div></section>
+@{
+    ViewData["Title"]="Управление афишей";
+}
+<section class="page-hero">
+    <span class="eyebrow">АДМИНИСТРАТИВНАЯ ПАНЕЛЬ</span>
+    <h1>
+        УПРАВЛЕНИЕ
+        <em>АФИШЕЙ</em>
+    </h1>
+    <p role="status">
+        @TempData["Message"]
+    </p>
+</section>
+<section class="section admin-section">
+    <nav class="admin-nav">
+        <a asp-action="Index">Обзор</a>
+        <a asp-action="Films">Фильмы</a>
+        <a asp-action="Screenings">Расписание</a>
+        <a asp-action="Users">Пользователи</a>
+        <a asp-action="Reviews">Отзывы</a>
+        <a asp-action="Messages">Обратная связь</a>
+    </nav>
+    <form asp-action="SaveFilm" method="post" class="admin-form">
+        <h2>
+            ДОБАВИТЬ
+            <em>ФИЛЬМ</em>
+        </h2>
+        <input name="Title" placeholder="Название" value="@TempData["FilmTitle"]" required/>
+        <input name="Genre" placeholder="Жанр" value="@TempData["FilmGenre"]"/>
+        <input name="DurationMinutes" type="number" placeholder="Длительность в минутах" value="@TempData["FilmDuration"]" min="1" max="500" required/>
+        <input name="AgeRating" placeholder="Возрастной рейтинг" value="@(TempData["FilmAgeRating"] ?? "12+")"/>
+        <input name="Poster" placeholder="Имя файла постера в wwwroot/images/posters, например poster-dune.jpg или poster-panda.avif" value="@TempData["FilmPoster"]"/>
+        <input name="TrailerUrl" placeholder="Ссылка на трейлер (необязательно, только HTTPS)" value="@TempData["FilmTrailerUrl"]"/>
+        <textarea name="Description" placeholder="Описание">
+            @TempData["FilmDescription"]
+        </textarea>
+        <button class="button button-primary" type="submit">
+            Добавить фильм ↗
+        </button>
+    </form>
+    <div class="admin-table">
+        @foreach (var film in Model)
+        {
+            <details class="film-edit">
+                <summary>
+                    @film.Title · @film.Genre · @film.DurationMinutes мин · @(film.IsActive?"В афише":"Скрыт")
+                </summary>
+                @if (film.IsActive)
+                {
+                    <form asp-action="SaveFilm" method="post" class="admin-form">
+                        <input type="hidden" name="Id" value="@film.Id"/>
+                        <input name="Title" value="@film.Title" required/>
+                        <input name="Genre" value="@film.Genre"/>
+                        <input name="DurationMinutes" type="number" value="@film.DurationMinutes" min="1" max="500" required/>
+                        <input name="AgeRating" value="@film.AgeRating"/>
+                        <input name="Poster" value="@film.Poster"/>
+                        <input name="TrailerUrl" value="@film.TrailerUrl"/>
+                        <textarea name="Description">@film.Description</textarea>
+                        <button class="button button-primary" type="submit">
+                            Сохранить изменения
+                        </button>
+                    </form>
+                    <form asp-action="DeleteFilm" method="post">
+                        <input type="hidden" name="id" value="@film.Id"/>
+                        <button class="button button-outline" type="submit">
+                            Убрать из афиши
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-action="RestoreFilm" method="post">
+                        <input type="hidden" name="id" value="@film.Id"/>
+                        <button class="button button-primary" type="submit">
+                            Вернуть в афишу
+                        </button>
+                    </form>
+                    <form asp-action="PermanentlyDeleteFilm" method="post" onsubmit="return confirm('Удалить фильм навсегда? Это действие нельзя отменить.');">
+                        <input type="hidden" name="id" value="@film.Id"/>
+                        <button class="button button-outline" type="submit">
+                            Удалить навсегда
+                        </button>
+                    </form>
+                }
+            </details>
+        }
+    </div>
+</section>

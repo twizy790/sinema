@@ -1,3 +1,50 @@
 @model List<CinemaSite.Models.Review>
-@{ ViewData["Title"]="Модерация отзывов"; }
-<section class="page-hero"><span class="eyebrow">АДМИНИСТРАТИВНАЯ ПАНЕЛЬ</span><h1>МОДЕРАЦИЯ <em>ОТЗЫВОВ</em></h1></section><section class="section admin-section"><nav class="admin-nav"><a asp-action="Index">Обзор</a>@if(User.IsInRole("Admin")){<a asp-action="Films">Фильмы</a><a asp-action="Screenings">Расписание</a><a asp-action="Users">Пользователи</a>}<a asp-action="Reviews">Отзывы</a><a asp-action="Messages">Обратная связь</a></nav><div class="review-list">@foreach(var review in Model){<article><div class="quote-stars">@(new string('★',review.Rating)+new string('☆',5-review.Rating))</div><blockquote>@review.Text</blockquote><span>@review.UserName · @review.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy") · @(review.IsApproved?"Опубликован":"Ожидает модерации")</span>@if(User.IsInRole("Admin")){<form asp-action="ModerateReview" method="post" class="moderation-form"><input type="hidden" name="id" value="@review.Id"/><button class="button button-primary" name="approve" value="true">Одобрить</button><button class="button button-outline" name="approve" value="false">Скрыть</button></form>}</article>}</div></section>
+@{
+    ViewData["Title"]="Модерация отзывов";
+}
+<section class="page-hero">
+    <span class="eyebrow">АДМИНИСТРАТИВНАЯ ПАНЕЛЬ</span>
+    <h1>
+        МОДЕРАЦИЯ
+        <em>ОТЗЫВОВ</em>
+    </h1>
+</section>
+<section class="section admin-section">
+    <nav class="admin-nav">
+        <a asp-action="Index">Обзор</a>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Films">Фильмы</a>
+            <a asp-action="Screenings">Расписание</a>
+            <a asp-action="Users">Пользователи</a>
+        }
+        <a asp-action="Reviews">Отзывы</a>
+        <a asp-action="Messages">Обратная связь</a>
+    </nav>
+    <div class="review-list">
+        @foreach (var review in Model)
+        {
+            <article>
+                <div class="quote-stars">
+                    @(new string('★',review.Rating)+new string('☆',5-review.Rating))
+                </div>
+                <blockquote>
+                    @review.Text
+                </blockquote>
+                <span>@review.UserName · @review.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy") · @(review.IsApproved?"Опубликован":"Ожидает модерации")</span>
+                @if (User.IsInRole("Admin"))
+                {
+                    <form asp-action="ModerateReview" method="post" class="moderation-form">
+                        <input type="hidden" name="id" value="@review.Id"/>
+                        <button class="button button-primary" name="approve" value="true">
+                            Одобрить
+                        </button>
+                        <button class="button button-outline" name="approve" value="false">
+                            Скрыть
+                        </button>
+                    </form>
+                }
+            </article>
+        }
+    </div>
+</section>

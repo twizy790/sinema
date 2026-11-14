@@ -1,2 +1,42 @@
-@{ ViewData["Title"] = "Личный кабинет"; }
-<section class="page-hero"><span class="eyebrow">ВАШЕ КИНО — ВАША ИСТОРИЯ</span><h1>ЛИЧНЫЙ <em>КАБИНЕТ</em></h1><p>Управляйте билетами и бронированиями в одном месте.</p></section>@if (User.Identity?.IsAuthenticated == true) { <section class="account-wrap"><div class="account-card"><span class="eyebrow">ДОБРО ПОЖАЛОВАТЬ</span><h2>@User.Identity.Name</h2><a class="button button-primary" asp-controller="Account" asp-action="Bookings">Мои бронирования ↗</a></div></section> } else { <section class="account-wrap"><div class="account-card"><span class="eyebrow">С РАДОСТЬЮ ВАС ВСТРЕТИМ</span><h2>ВОЙТИ В <em>АККАУНТ</em></h2><a class="button button-primary" asp-controller="Account" asp-action="Login">Войти <span>↗</span></a><p class="account-hint">Нет аккаунта? <a asp-controller="Account" asp-action="Register">Зарегистрируйтесь</a></p></div></section> }
+@{
+    ViewData["Title"] = "Личный кабинет";
+}
+<section class="page-hero">
+    <span class="eyebrow">ВАШЕ КИНО — ВАША ИСТОРИЯ</span>
+    <h1>
+        ЛИЧНЫЙ
+        <em>КАБИНЕТ</em>
+    </h1>
+    <p>
+        Управляйте билетами и бронированиями в одном месте.
+    </p>
+</section>
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <section class="account-wrap">
+        <div class="account-card">
+            <span class="eyebrow">ДОБРО ПОЖАЛОВАТЬ</span>
+            <h2>
+                @User.Identity.Name
+            </h2>
+            <a class="button button-primary" asp-controller="Account" asp-action="Bookings">Мои бронирования ↗</a>
+        </div>
+    </section>
+}
+else
+{
+    <section class="account-wrap">
+        <div class="account-card">
+            <span class="eyebrow">С РАДОСТЬЮ ВАС ВСТРЕТИМ</span>
+            <h2>
+                ВОЙТИ В
+                <em>АККАУНТ</em>
+            </h2>
+            <a class="button button-primary" asp-controller="Account" asp-action="Login">Войти <span>↗</span></a>
+            <p class="account-hint">
+                Нет аккаунта?
+                <a asp-controller="Account" asp-action="Register">Зарегистрируйтесь</a>
+            </p>
+        </div>
+    </section>
+}

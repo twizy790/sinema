@@ -1,3 +1,64 @@
 @model List<CinemaSite.Models.AppUser>
-@{ ViewData["Title"]="Пользователи"; }
-<section class="page-hero"><span class="eyebrow">АДМИНИСТРАТИВНАЯ ПАНЕЛЬ</span><h1>РОЛИ <em>ПОЛЬЗОВАТЕЛЕЙ</em></h1><p>@TempData["Message"]</p></section><section class="section admin-section"><nav class="admin-nav"><a asp-action="Index">Обзор</a><a asp-action="Films">Фильмы</a><a asp-action="Screenings">Расписание</a><a asp-action="Users">Пользователи</a><a asp-action="Reviews">Отзывы</a><a asp-action="Messages">Обратная связь</a><a asp-action="Faq">FAQ</a></nav><div class="admin-table">@foreach(var user in Model){<div class="admin-row"><span>@user.Name</span><span>@user.Email</span><span>@user.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</span><span>@user.Role · @(user.IsActive?"Активен":"Отключён")</span>@if(user.Id!=User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value){<div><form asp-action="SetRole" method="post"><input type="hidden" name="id" value="@user.Id"/><select name="role"><option value="User" selected="@(user.Role=="User")">Пользователь</option><option value="Manager" selected="@(user.Role=="Manager")">Менеджер</option><option value="Admin" selected="@(user.Role=="Admin")">Администратор</option></select><button class="button button-outline" type="submit">Роль</button></form><form asp-action="ToggleUser" method="post"><input type="hidden" name="id" value="@user.Id"/><button class="button button-outline" type="submit">@(user.IsActive?"Отключить":"Включить")</button></form></div>}</div>}</div></section>
+@{
+    ViewData["Title"]="Пользователи";
+}
+<section class="page-hero">
+    <span class="eyebrow">АДМИНИСТРАТИВНАЯ ПАНЕЛЬ</span>
+    <h1>
+        РОЛИ
+        <em>ПОЛЬЗОВАТЕЛЕЙ</em>
+    </h1>
+    <p>
+        @TempData["Message"]
+    </p>
+</section>
+<section class="section admin-section">
+    <nav class="admin-nav">
+        <a asp-action="Index">Обзор</a>
+        <a asp-action="Films">Фильмы</a>
+        <a asp-action="Screenings">Расписание</a>
+        <a asp-action="Users">Пользователи</a>
+        <a asp-action="Reviews">Отзывы</a>
+        <a asp-action="Messages">Обратная связь</a>
+        <a asp-action="Faq">FAQ</a>
+    </nav>
+    <div class="admin-table">
+        @foreach (var user in Model)
+        {
+            <div class="admin-row">
+                <span>@user.Name</span>
+                <span>@user.Email</span>
+                <span>@user.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</span>
+                <span>@user.Role · @(user.IsActive?"Активен":"Отключён")</span>
+                @if (user.Id!=User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+                {
+                    <div>
+                        <form asp-action="SetRole" method="post">
+                            <input type="hidden" name="id" value="@user.Id"/>
+                            <select name="role">
+                                <option value="User" selected="@(user.Role=="User")">
+                                    Пользователь
+                                </option>
+                                <option value="Manager" selected="@(user.Role=="Manager")">
+                                    Менеджер
+                                </option>
+                                <option value="Admin" selected="@(user.Role=="Admin")">
+                                    Администратор
+                                </option>
+                            </select>
+                            <button class="button button-outline" type="submit">
+                                Роль
+                            </button>
+                        </form>
+                        <form asp-action="ToggleUser" method="post">
+                            <input type="hidden" name="id" value="@user.Id"/>
+                            <button class="button button-outline" type="submit">
+                                @(user.IsActive?"Отключить":"Включить")
+                            </button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>

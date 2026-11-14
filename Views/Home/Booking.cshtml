@@ -1,5 +1,130 @@
 @using CinemaSite.Models
-@{ ViewData["Title"] = "Бронирование билетов"; var screenings = ViewBag.Screenings as List<Screening> ?? []; var films = ViewBag.Films as List<Film> ?? []; var selected = ViewBag.SelectedScreening as Screening; var booked = ViewBag.BookedSeats as List<string> ?? []; }
-<section class="page-hero"><span class="eyebrow">ВАШ ВЕЧЕР НАЧИНАЕТСЯ ЗДЕСЬ</span><h1>ВЫБРАТЬ <em>СЕАНС</em></h1><p>Выберите фильм, время и места. Бронь сохранится в вашем личном кабинете.</p></section>
-<section class="booking-wrap"><div class="booking-panel"><h2>01 <span>ФИЛЬМ И СЕАНС</span></h2>@if (selected is null) { <p>Нет доступных сеансов.</p> } else { <form asp-action="Booking" method="post" id="booking-form"><label>Сеанс<select name="screeningId" id="screening">@foreach(var item in screenings){var movie=films.FirstOrDefault(x=>x.Id==item.FilmId);<option value="@item.Id" selected="@(item.Id==selected.Id)">@movie?.Title · @item.StartsAt.ToString("dd.MM HH:mm") · @item.Hall зал · @item.TicketPrice ₽</option>}</select></label><h2 class="seat-title">02 <span>ВЫБЕРИТЕ МЕСТА</span></h2><div class="screen-label">ЭКРАН</div><div class="seat-map" aria-label="Схема мест">@for (var row = 1; row <= selected.Rows; row++) { <div class="seat-row"><span class="row-label">@row</span>@for (var seat = 1; seat <= selected.SeatsPerRow; seat++) {var key=$"{row}-{seat}";if(booked.Contains(key)){<span class="seat unavailable" title="Занято"></span>}else{<label class="seat-choice"><input type="checkbox" name="seats" value="@key" /><span class="seat"></span></label>}}</div> }</div><div class="seat-legend"><span><i class="legend-free"></i>Свободно</span><span><i class="legend-picked"></i>Выбрано</span><span><i class="legend-busy"></i>Занято</span></div><div class="booking-bottom"><span>Стоимость <strong id="price">0 ₽</strong></span>@if(User.Identity?.IsAuthenticated==true){<button class="button button-primary" type="submit">Забронировать <span>↗</span></button>}else{<a class="button button-primary" asp-controller="Account" asp-action="Login" asp-route-returnUrl="/Home/Booking?screeningId=@selected.Id">Войти для брони <span>↗</span></a>}</div></form> }</div><aside class="booking-aside"><span class="eyebrow">ВАЖНО ЗНАТЬ</span><h3>Выбирайте места<br />с комфортом</h3><p>Занятые места нельзя выбрать. После бронирования ваши места будут недоступны другим посетителям.</p><div class="aside-note">Оплата картой пока не подключена. Статус брони останется «Ожидает оплаты» до подтверждения менеджером.</div>@if(TempData["BookingMessage"] is string message){<div class="notice">@message</div>}</aside></section>
-@section Scripts { <script>const price=@(selected?.TicketPrice??0);document.querySelectorAll('.seat-choice input').forEach(x=>x.addEventListener('change',()=>{document.getElementById('price').textContent=(document.querySelectorAll('.seat-choice input:checked').length*price)+' ₽'}));document.getElementById('screening')?.addEventListener('change',e=>{location.href='?screeningId='+encodeURIComponent(e.target.value)});</script> }
+@{
+    ViewData["Title"] = "Бронирование билетов";
+    var screenings = ViewBag.Screenings as List<Screening> ?? [];
+    var films = ViewBag.Films as List<Film> ?? [];
+    var selected = ViewBag.SelectedScreening as Screening;
+    var booked = ViewBag.BookedSeats as List<string> ?? [];
+}
+<section class="page-hero">
+    <span class="eyebrow">ВАШ ВЕЧЕР НАЧИНАЕТСЯ ЗДЕСЬ</span>
+    <h1>
+        ВЫБРАТЬ
+        <em>СЕАНС</em>
+    </h1>
+    <p>
+        Выберите фильм, время и места. Бронь сохранится в вашем личном кабинете.
+    </p>
+</section>
+<section class="booking-wrap">
+    <div class="booking-panel">
+        <h2>
+            01
+            <span>ФИЛЬМ И СЕАНС</span>
+        </h2>
+        @if (selected is null)
+        {
+            <p>
+                Нет доступных сеансов.
+            </p>
+        }
+        else
+        {
+            <form asp-action="Booking" method="post" id="booking-form">
+                <label>
+                    Сеанс
+                    <select name="screeningId" id="screening">
+                        @foreach (var item in screenings)
+                        {
+                            var movie=films.FirstOrDefault(x=>x.Id==item.FilmId);
+                            <option value="@item.Id" selected="@(item.Id==selected.Id)">
+                                @movie?.Title · @item.StartsAt.ToString("dd.MM HH:mm") · @item.Hall зал · @item.TicketPrice ₽
+                            </option>
+                        }
+                    </select>
+                </label>
+                <h2 class="seat-title">
+                    02
+                    <span>ВЫБЕРИТЕ МЕСТА</span>
+                </h2>
+                <div class="screen-label">
+                    ЭКРАН
+                </div>
+                <div class="seat-map" aria-label="Схема мест">
+                    @for (var row = 1; row <= selected.Rows; row++)
+                    {
+                        <div class="seat-row">
+                            <span class="row-label">@row</span>
+                            @for (var seat = 1; seat <= selected.SeatsPerRow; seat++)
+                            {
+                                var key=$"{row}-{seat}";
+                                if (booked.Contains(key))
+                                {
+                                    <span class="seat unavailable" title="Занято"></span>
+                                }
+                                else
+                                {
+                                    <label class="seat-choice">
+                                        <input type="checkbox" name="seats" value="@key" />
+                                        <span class="seat"></span>
+                                    </label>
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="seat-legend">
+                    <span><i class="legend-free"></i>Свободно</span>
+                    <span><i class="legend-picked"></i>Выбрано</span>
+                    <span><i class="legend-busy"></i>Занято</span>
+                </div>
+                <div class="booking-bottom">
+                    <span>Стоимость <strong id="price">0 ₽</strong></span>
+                    @if (User.Identity?.IsAuthenticated==true)
+                    {
+                        <button class="button button-primary" type="submit">
+                            Забронировать
+                            <span>↗</span>
+                        </button>
+                    }
+                    else
+                    {
+                        <a class="button button-primary" asp-controller="Account" asp-action="Login" asp-route-returnUrl="/Home/Booking?screeningId=@selected.Id">
+                            Войти для брони
+                            <span>↗</span>
+                        </a>
+                    }
+                </div>
+            </form>
+        }
+    </div>
+    <aside class="booking-aside">
+        <span class="eyebrow">ВАЖНО ЗНАТЬ</span>
+        <h3>
+            Выбирайте места
+            <br />
+            с комфортом
+        </h3>
+        <p>
+            Занятые места нельзя выбрать. После бронирования ваши места будут недоступны
+            другим посетителям.
+        </p>
+        <div class="aside-note">
+            Оплата картой пока не подключена. Статус брони останется «Ожидает оплаты» до
+            подтверждения менеджером.
+        </div>
+        @if (TempData["BookingMessage"] is string message)
+        {
+            <div class="notice">
+                @message
+            </div>
+        }
+    </aside>
+</section>
+@section Scripts {
+    <script>
+        const price=@(selected?.TicketPrice??0);
+        document.querySelectorAll('.seat-choice input').forEach(x=>x.addEventListener('change',()=>{document.getElementById('price').textContent=(document.querySelectorAll('.seat-choice input:checked').length*price)+' ₽'}));
+        document.getElementById('screening')?.addEventListener('change',e=>{location.href='?screeningId='+encodeURIComponent(e.target.value)});
+    </script>
+}

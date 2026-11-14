@@ -4,29 +4,77 @@
 }
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#101014" />
-    <title>@title — СИНЕМА</title>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/hero-slider.css" asp-append-version="true" />
-</head>
-<body>
-    <header class="site-header">
-        <a class="brand" asp-area="" asp-controller="Home" asp-action="Index"><span class="brand-mark">С</span><span>@settings.CinemaName<small>КИНОТЕАТР</small></span></a>
-        <button class="menu-toggle" aria-label="Открыть меню" aria-expanded="false">☰</button>
-        <nav class="main-nav">
-            <a asp-area="" asp-controller="Home" asp-action="About">О кинотеатре</a><a asp-area="" asp-controller="Home" asp-action="Schedule">Афиша</a><a asp-area="" asp-controller="Home" asp-action="Services">Услуги</a><a asp-area="" asp-controller="Home" asp-action="Booking">Билеты</a><a asp-area="" asp-controller="Home" asp-action="Reviews">Отзывы</a><a asp-area="" asp-controller="Home" asp-action="Contacts">Контакты</a>
-        </nav>
-        @if (User.Identity?.IsAuthenticated == true) { <div class="user-links"><a class="account-link" asp-area="" asp-controller="Account" asp-action="Bookings">Билеты</a><a class="account-link" asp-area="" asp-controller="Account" asp-action="Profile">@User.Identity.Name</a>@if (User.IsInRole("Admin") || User.IsInRole("Manager")) { <a class="account-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Админ</a><a class="account-link site-return-link" asp-area="" asp-controller="Home" asp-action="Index">На сайт</a> }<form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="logout-form"><button class="account-link" type="submit">Выйти</button></form></div> } else { <a class="account-link" asp-area="" asp-controller="Account" asp-action="Login">Личный кабинет <span>↗</span></a> }
-    </header>
-    <main>@RenderBody()</main>
-    <footer class="site-footer">
-        <div class="footer-top"><a class="brand" asp-area="" asp-controller="Home" asp-action="Index"><span class="brand-mark">С</span><span>@settings.CinemaName<small>КИНОТЕАТР</small></span></a><p>Большой экран. Большие эмоции.</p><a class="button button-outline" asp-area="" asp-controller="Home" asp-action="Booking">Выбрать сеанс <span>↗</span></a></div>
-        <div class="footer-bottom"><span>© @DateTime.Now.Year @settings.CinemaName</span><span>@settings.Address · @settings.Phone</span><a asp-area="" asp-controller="Home" asp-action="Team">Команда проекта</a><a asp-area="" asp-controller="Home" asp-action="Privacy">Политика конфиденциальности</a></div>
-    </footer>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#101014" />
+        <title>
+            @title — СИНЕМА
+        </title>
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/hero-slider.css" asp-append-version="true" />
+    </head>
+    <body>
+        <header class="site-header">
+            <a class="brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <span class="brand-mark">С</span>
+                <span>@settings.CinemaName<small>КИНОТЕАТР</small></span>
+            </a>
+            <button class="menu-toggle" aria-label="Открыть меню" aria-expanded="false">
+                ☰
+            </button>
+            <nav class="main-nav">
+                <a asp-area="" asp-controller="Home" asp-action="About">О кинотеатре</a>
+                <a asp-area="" asp-controller="Home" asp-action="Schedule">Афиша</a>
+                <a asp-area="" asp-controller="Home" asp-action="Services">Услуги</a>
+                <a asp-area="" asp-controller="Home" asp-action="Booking">Билеты</a>
+                <a asp-area="" asp-controller="Home" asp-action="Reviews">Отзывы</a>
+                <a asp-area="" asp-controller="Home" asp-action="Contacts">Контакты</a>
+            </nav>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <div class="user-links">
+                    <a class="account-link" asp-area="" asp-controller="Account" asp-action="Bookings">Билеты</a>
+                    <a class="account-link" asp-area="" asp-controller="Account" asp-action="Profile">@User.Identity.Name</a>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                    {
+                        <a class="account-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Админ</a>
+                        <a class="account-link site-return-link" asp-area="" asp-controller="Home" asp-action="Index">На сайт</a>
+                    }
+                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="logout-form">
+                        <button class="account-link" type="submit">
+                            Выйти
+                        </button>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <a class="account-link" asp-area="" asp-controller="Account" asp-action="Login">Личный кабинет <span>↗</span></a>
+            }
+        </header>
+        <main>
+            @RenderBody()
+        </main>
+        <footer class="site-footer">
+            <div class="footer-top">
+                <a class="brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="brand-mark">С</span>
+                    <span>@settings.CinemaName<small>КИНОТЕАТР</small></span>
+                </a>
+                <p>
+                    Большой экран. Большие эмоции.
+                </p>
+                <a class="button button-outline" asp-area="" asp-controller="Home" asp-action="Booking">Выбрать сеанс <span>↗</span></a>
+            </div>
+            <div class="footer-bottom">
+                <span>© @DateTime.Now.Year @settings.CinemaName</span>
+                <span>@settings.Address · @settings.Phone</span>
+                <a asp-area="" asp-controller="Home" asp-action="Team">Команда проекта</a>
+                <a asp-area="" asp-controller="Home" asp-action="Privacy">Политика конфиденциальности</a>
+            </div>
+        </footer>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        @await RenderSectionAsync("Scripts", required: false)
+    </body>
 </html>
